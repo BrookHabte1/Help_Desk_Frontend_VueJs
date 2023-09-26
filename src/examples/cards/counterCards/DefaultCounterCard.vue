@@ -1,0 +1,54 @@
+<script setup>
+import CountTo from "vue-count-to/src";
+
+defineProps({
+  count: {
+    type: Number,
+    required: true,
+  },
+  suffix: {
+    type: String,
+    default: "",
+  },
+  duration: {
+    type: Number,
+    default: 4000,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  color: {
+    validator(value) {
+      return [
+        "primary",
+        "secondary",
+        "info",
+        "success",
+        "warning",
+        "error",
+        "light",
+        "dark",
+      ].includes(value);
+    },
+  },
+  divider: {
+    validator(value) {
+      return ["vertical", "horizontal"].includes(value);
+    },
+  },
+});
+</script>
+<template>
+  <div class="text-center">
+    <h5 class="mt-5">{{ title }}</h5>
+    <p class="text-sm font-weight-normal">
+      {{ description }}
+    </p>
+  </div>
+  <hr :class="`${divider ? divider : ''} dark`" />
+</template>
