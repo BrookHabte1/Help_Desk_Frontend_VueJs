@@ -1,7 +1,8 @@
 <script setup>
-import DefaultNavbar from "@/examples/navbars/NavbarDefault.vue";
-import CenteredFooter from "@/examples/footers/FooterCentered.vue";
+import DefaultNavbar from "@/examples/navbars/NavbarDefaultLight.vue";
+import FooterDefault from "@/examples/footers/FooterDefaultForEmailListLessThanAndEqualToOne";
 import Breadcrumbs from "@/examples/Breadcrumbs.vue";
+import FooterDefaultForEmailListLessThanAndEqualToOne from "../../../examples/footers/FooterDefaultForEmailListLessThanAndEqualToOne.vue";
 
 defineProps({
   breadcrumb: {
@@ -22,11 +23,11 @@ defineProps({
         <div class="mb-4 w-100 w-md-50 w-lg-25">
           <Breadcrumbs :routes="breadcrumb" />
           <h3>{{ title }}</h3>
-        </div>
+        </div>f
 
         <slot />
       </div>
     </div>
   </div>
-  <CenteredFooter />
+  <FooterDefault />
 </template>

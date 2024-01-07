@@ -1,21 +1,25 @@
 <script setup>
 import { RouterLink } from "vue-router";
-import { ref, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { useWindowsWidth } from "../../assets/js/useWindowsWidth";
-
 import { useAuthStore } from "../../stores/auth";
 
-const authStore = useAuthStore();
-
-onMounted(async () => {
-  await authStore.getUser();
-});
-
-// images
 import ArrDark from "@/assets/img/down-arrow-dark.svg";
 import DownArrWhite from "@/assets/img/down-arrow-white.svg";
 
-import bg1 from "@/assets/img/Top_Image.jpg";
+import bg1 from "../../assets/img/Top_Image.jpg";
+
+const authStore = useAuthStore();
+
+const fetchData = async () => {
+  try {
+    await authStore.getUser();
+  } catch (error) {
+    return false;
+  }
+};
+
+fetchData(); // Call the fetchData function
 
 const props = defineProps({
   action: {
@@ -94,6 +98,7 @@ watch(
   }
 );
 </script>
+
 <template style="object-fit: cover">
   <div
     class="img-fluid"
@@ -175,6 +180,7 @@ watch(
       <div
         class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0"
         id="navigation"
+        v-if="authStore.user"
       >
         <ul class="navbar-nav navbar-nav-hover ms-auto">
           <li class="nav-item list-group-item mx-2">
@@ -199,13 +205,16 @@ watch(
             >
               <RouterLink
                 class="hover-gray border-radius-md"
-                :to="{ name: 'FAQ' }"
+                :to="{ name: 'faq' }"
               >
                 <span class="font-weight-bolder">FAQs</span>
               </RouterLink>
             </a>
           </li>
-          <li class="nav-item list-group-item mx-2">
+          <li
+            class="nav-item list-group-item mx-2"
+            v-if="authStore.authUser.data.role == 'contact_user'"
+          >
             <a
               role="button"
               class="nav-link ps-2 d-flex cursor-pointer align-items-center"
@@ -219,82 +228,93 @@ watch(
               </RouterLink>
             </a>
           </li>
-          <li class="nav-item list-group-item">
-            <template v-if="authStore.user">
-              <a
-                role="button"
-                class="nav-link ps-2 d-flex cursor-pointer align-items-center"
-                :class="getTextColor()"
+          <li
+            class="nav-item list-group-item"
+            v-if="authStore.user.data.role == 'super_admin'"
+          >
+            <a
+              role="button"
+              class="nav-link ps-2 d-flex cursor-pointer align-items-center"
+              :class="getTextColor()"
+            >
+              <RouterLink
+                class="hover-gray border-radius-md"
+                :to="{ name: 'manage' }"
               >
-                <RouterLink
-                  class="hover-gray border-radius-md"
-                  :to="{ name: 'emails' }"
-                >
-                  <span class="font-weight-bolder">Emails</span>
-                </RouterLink>
-              </a>
-            </template>
+                <span class="font-weight-bolder">Manage</span>
+              </RouterLink>
+            </a>
           </li>
-          <li class="nav-item list-group-item mx-2">
-            <template v-if="!authStore.user">
-              <a
-                role="button"
-                class="nav-link ps-2 d-flex cursor-pointer align-items-center"
-                :class="getTextColor()"
+          <li
+            class="nav-item list-group-item"
+            v-if="authStore.user.data.role == 'admin'"
+          >
+            <a
+              role="button"
+              class="nav-link ps-2 d-flex cursor-pointer align-items-center"
+              :class="getTextColor()"
+            >
+              <RouterLink
+                class="hover-gray border-radius-md"
+                :to="{ name: 'manage_contact_users' }"
               >
-                <RouterLink
-                  class="hover-gray border-radius-md"
-                  :to="{ name: 'Login' }"
-                >
-                  <i class="fa fa-user" aria-hidden="true"></i>
-                </RouterLink>
-              </a>
-            </template>
+                <span class="font-weight-bolder">Manage</span>
+              </RouterLink>
+            </a>
           </li>
-          <template v-if="authStore.user">
-            <li class="nav-item dropdown dropdown-hover">
-              <a
-                role="button"
-                class="nav-link ps-2 d-flex cursor-pointer align-items-center"
-                :class="getTextColor()"
-                id="dropdownMenuDocs"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Hi, {{ authStore.user.name }}
-                <img
-                  :src="getArrowColor()"
-                  alt="down-arrow"
-                  class="arrow ms-2 d-lg-block d-none"
-                />
-                <img
-                  :src="getArrowColor()"
-                  alt="down-arrow"
-                  class="arrow ms-1 d-lg-none d-block ms-auto"
-                />
-              </a>
-              <div
-                class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md mt-0 mt-lg-3 p-3 border-radius-sm"
-                aria-labelledby="dropdownMenuDocs"
-              >
-                <div class="d-none d-lg-block">
-                  <ul class="list-group">
-                    <li class="nav-item list-group-item border-0 p-0">
-                      <h6
-                        class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+          <li class="nav-item dropdown dropdown-hover">
+            <a
+              role="button"
+              class="nav-link ps-2 d-flex cursor-pointer align-items-center"
+              :class="getTextColor()"
+              id="dropdownMenuDocs"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Hi, {{ authStore.user.data.name }}
+              <img
+                :src="getArrowColor()"
+                alt="down-arrow"
+                class="arrow ms-2 d-lg-block d-none"
+              />
+              <img
+                :src="getArrowColor()"
+                alt="down-arrow"
+                class="arrow ms-1 d-lg-none d-block ms-auto"
+              />
+            </a>
+            <div
+              class="dropdown-menu dropdown-menu-end dropdown-menu-animation dropdown-md mt-0 mt-lg-3 p-3 border-radius-sm"
+              aria-labelledby="dropdownMenuDocs"
+            >
+              <div class="d-none d-lg-block">
+                <ul class="list-group">
+                  <li class="nav-item list-group-item border-0 p-0">
+                    <h6
+                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                    >
+                      <a
+                        class="dropdown-item py-2 ps-3 text-dark border-radius-sm text-bold"
+                        href="/profile"
+                        >Profile</a
                       >
-                        <a
-                          class="dropdown-item py-2 ps-3 border-radius-md"
-                          @click="authStore.handleLogout"
-                          >Sign Out</a
-                        >
-                      </h6>
-                    </li>
-                  </ul>
-                </div>
+                    </h6>
+                  </li>
+                  <li class="nav-item list-group-item border-0 p-0">
+                    <h6
+                      class="dropdown-header text-dark font-weight-bolder d-flex justify-content-cente align-items-center p-0"
+                    >
+                      <a
+                        class="dropdown-item py-2 ps-3 border-radius-sm text-bold"
+                        @click="authStore.handleLogout"
+                        >Sign Out</a
+                      >
+                    </h6>
+                  </li>
+                </ul>
               </div>
-            </li>
-          </template>
+            </div>
+          </li>
         </ul>
         <ul class="navbar-nav d-lg-block d-none">
           <li class="nav-item">

@@ -1,5 +1,5 @@
 <script setup>
-import CountTo from "vue-count-to/src";
+// import CountTo from "vue-count-to/src";
 
 defineProps({
   count: {
@@ -45,7 +45,12 @@ defineProps({
 </script>
 <template>
   <div class="text-center">
-    <h5 class="mt-5">{{ title }}</h5>
+    <!-- <h1 :class="`text-gradient text-${color ?? 'success'}`">
+      <CountTo :start-val="0" :end-val="count" :duration="duration" />{{
+        suffix
+      }}
+    </h1> -->
+    <h3 class="mt-3">{{ title }}</h3>
     <p class="text-sm font-weight-normal">
       {{ description }}
     </p>

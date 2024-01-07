@@ -143,7 +143,7 @@ defineProps({
             <li class="nav-item mr-4">
               <RouterLink
                 class="hover-link border-radius-md"
-                :to="{ name: 'FAQ' }"
+                :to="{ name: 'faq' }"
               >
                 <span class="font-weight-bolder">FAQs</span>
               </RouterLink>
@@ -205,6 +205,7 @@ defineProps({
 </template>
 
 <style scoped>
+
 .hover-link {
   color: white;
   transition: color 0.2s; /* Add a smooth transition effect */

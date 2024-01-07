@@ -1,11 +1,12 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     token: null,
+    isLoggedIn: localStorage.getItem("lbUser"),
   },
   mutations: {
     setToken(state, token) {
@@ -17,10 +18,10 @@ export default new Vuex.Store({
   },
   actions: {
     setToken({ commit }, token) {
-      commit('setToken', token);
+      commit("setToken", token);
     },
     clearToken({ commit }) {
-      commit('clearToken');
+      commit("clearToken");
     },
   },
 });
